@@ -80,6 +80,12 @@ def run():
         '"cid":1,"uri":"geth://","jsps":["/result/timestamp"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByNumber\\\",\\\"params\\\":[\\\"0x1234\\\",false],\\\"id\\\":1}"',
         '"cid":1,"uri":"geth://","jsps":["/result/hash"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByNumber\\\",\\\"params\\\":[\\\"0x1234\\\",false],\\\"id\\\":1}"',
         '"cid":1,"uri":"geth://","jsps":["/result/logsBloom"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByNumber\\\",\\\"params\\\":[\\\"0x1234\\\",false],\\\"id\\\":1}"'
+
+        # eth_getBlockByHash
+        '"cid":1,"uri":"geth://","jsps":["/result/timestamp"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByHash\\\",\\\"params\\\":[\\\"0xaddbab0cf8f32d7954f66771b54e0794cd22ee067a4d31fb1baa6cc812c79d77\\\",false],\\\"id\\\":1}"',
+
+        # eth_call
+        '"cid":1,"uri":"geth://","jsps":["/result"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_call\\\",\\\"params\\\":[{\\\"to\\\":\\\"0xebe8efa441b9302a0d7eaecc277c09d20d684540\\\",\\\"data\\\":\\\"0x45848dfc\\\"},\\\"latest\\\"],\\\"id\\\":1}"',
     ]
     for request in example_requests:
         response = send_oracle_request(request)
