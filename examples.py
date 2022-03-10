@@ -5,18 +5,18 @@ import requests
 
 MIN_POW_RESULT = 10000
 MAX_POW_NUMBER = 100000
-url=''
+url='http://127.0.0.1:2234'
 headers = {'Content-type': 'application/json'}
 
 
-def send_oracle_request():
+def send_oracle_request(request):
     ts = str(int(time.time())) + '000'
     i = 0
     print('========== Calculating PoW number ==========')
 
     while i < MAX_POW_NUMBER:
         pow = str(i)
-        s = '{"cid":1,"uri":"http://worldtimeapi.org/api/timezone/Europe/Kiev","jsps":["/unixtime","/day_of_year"],"trims":[1,1],"time":'+ts+',"pow":'+pow+'}'
+        s = '{'+request+',"time":'+ts+',"pow":'+pow+'}'
         k = SHA3_256.new()
         k.update(str.encode(s))
         b = "0x" + k.hexdigest()
@@ -27,8 +27,6 @@ def send_oracle_request():
             break
         i += 1
 
-    print('')
-    print('')
     print('========== Sending request to Oracle ==========')
     call_data = {
         "id": 83,
@@ -45,8 +43,6 @@ def send_oracle_request():
 
 def check_result(hash):
     time.sleep(3)
-    print('')
-    print('')
     print('========== Getting result from Oracle ==========')
     j = 0
     response2 = {}
@@ -73,5 +69,23 @@ def check_result(hash):
 
 
 def run():
-    response = send_oracle_request()
-    check_result(response['result'])
+    example_requests = [
+        # request to server
+        '"cid":1,"uri":"http://worldtimeapi.org/api/timezone/Europe/Kiev","jsps":["/unixtime","/day_of_year"],"trims":[1,1]',
+
+        # eth_gasPrice
+        '"cid":1,"uri":"geth://","jsps":["/result"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_gasPrice\\\",\\\"params\\\":[],\\\"id\\\":1}"',
+
+        # eth_getBlockByNumber
+        '"cid":1,"uri":"geth://","jsps":["/result/timestamp"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByNumber\\\",\\\"params\\\":[\\\"0x1234\\\",false],\\\"id\\\":1}"',
+        '"cid":1,"uri":"geth://","jsps":["/result/hash"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByNumber\\\",\\\"params\\\":[\\\"0x1234\\\",false],\\\"id\\\":1}"',
+        '"cid":1,"uri":"geth://","jsps":["/result/logsBloom"],"post":"{\\\"jsonrpc\\\":\\\"2.0\\\",\\\"method\\\":\\\"eth_getBlockByNumber\\\",\\\"params\\\":[\\\"0x1234\\\",false],\\\"id\\\":1}"'
+    ]
+    for request in example_requests:
+        response = send_oracle_request(request)
+        check_result(response['result'])
+        print('')
+        print('')
+
+run()
+
