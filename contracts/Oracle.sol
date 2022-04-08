@@ -8,7 +8,7 @@ contract Oracle is Verifier {
 
     event DataUpdated(uint256 indexed cid, uint256 indexed time);
 
-    function setData(
+    function setOracleResponse(
         uint256 cid,
         string memory uri,
         string[] memory jsps,
@@ -25,7 +25,7 @@ contract Oracle is Verifier {
         // verify signature
         require(sigs.length == getNumberOfNodesInSchain(), "Invalid length of signatures");
         uint256 verifiedAmount = 0;
-        string memory oracleData = combineOracleData(cid, uri, jsps, trims, post, time, rslts);
+        string memory oracleData = combineOracleResponse(cid, uri, jsps, trims, post, time, rslts);
         bytes32 hashedMessage = keccak256(abi.encodePacked(oracleData));
         for (uint256 i = 0; i < sigs.length; i++) {
             if (sigs[i].v != 0 || sigs[i].r != bytes32(0) || sigs[i].s != bytes32(0)) {
@@ -40,7 +40,7 @@ contract Oracle is Verifier {
         emit DataUpdated(cid, time);
     }
 
-    function combineOracleData(
+    function combineOracleResponse(
         uint256 cid,
         string memory uri,
         string[] memory jsps,

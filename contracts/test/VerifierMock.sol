@@ -3,9 +3,13 @@ pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-import "./Reader.sol";
+import "hardhat/console.sol";
 
-contract Verifier is Reader {
+contract VerifierMock {
+
+    address[] public nodeAddresses;
+
+    uint256 public numberOfNodes;
 
     using ECDSA for bytes32;
 
@@ -15,13 +19,20 @@ contract Verifier is Reader {
         bytes32 s;
     }
 
+    function setNodeAddress(address nodeAddress) public {
+        nodeAddresses.push(nodeAddress);
+    }
+
+    function setNumberOfNodes(uint256 amountOfNodes) public {
+        numberOfNodes = amountOfNodes;
+    }
+
     function verifySignature(uint256 nodeIndex, bytes32 hashedMessage, Signature memory signature)
         public
         view
         returns (bool)
     {
-        string memory pathToAddress = string.concat("skaleConfig.sChain.nodes[", Strings.toString(nodeIndex), "].owner");
-        address nodeAddress = _getConfigVariableAddress(pathToAddress);
+        address nodeAddress = nodeAddresses[nodeIndex];
         return nodeAddress == hashedMessage.recover(signature.v, signature.r, signature.s);
     }
 
@@ -31,7 +42,7 @@ contract Verifier is Reader {
     }
 
     function getNumberOfNodesInSchain() public view returns (uint256) {
-        return _getConfigVariableUint256("skaleConfig.nodeInfo.wallets.ima.n");
+        return numberOfNodes;
     }
 
 }
