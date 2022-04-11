@@ -20,7 +20,6 @@ contract Oracle is Verifier {
     )
         public
     {
-        require((trims.length == 0 && bytes(post).length != 0) || (trims.length != 0 && bytes(post).length == 0), "Incorrect Oracle response");
         require(jsps.length > 0 && jsps.length == rslts.length && (trims.length == 0 || trims.length == rslts.length), "Incorrect number of results");
         // verify signature
         require(sigs.length == getNumberOfNodesInSchain(), "Invalid length of signatures");
@@ -67,7 +66,8 @@ contract Oracle is Verifier {
                 wholeData = string.concat(wholeData, Strings.toString(trims[i]), ",");
             }
             wholeData = string.concat(wholeData, Strings.toString(trims[trims.length - 1]), "],");
-        } else {
+        }
+        if (bytes(post).length != 0) {
             wholeData = string.concat(wholeData, "\"post\":\"", post, "\",");
         }
         wholeData = string.concat(wholeData, "\"time\":", Strings.toString(time), ",");

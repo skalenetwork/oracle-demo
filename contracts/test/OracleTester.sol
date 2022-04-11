@@ -4,8 +4,6 @@ pragma solidity 0.8.13;
 import "./VerifierMock.sol";
 
 contract OracleTester is VerifierMock {
-    using ECDSA for bytes32;
-    using ECDSA for bytes;
     mapping(bytes32 => string) public data;
 
     event DataUpdated(uint256 indexed cid, uint256 indexed time);
@@ -22,7 +20,6 @@ contract OracleTester is VerifierMock {
     )
         public
     {
-        require((trims.length == 0 && bytes(post).length != 0) || (trims.length != 0 && bytes(post).length == 0), "Incorrect Oracle response");
         require(jsps.length > 0 && jsps.length == rslts.length && (trims.length == 0 || trims.length == rslts.length), "Incorrect number of results");
         // verify signature
         require(sigs.length == getNumberOfNodesInSchain(), "Invalid length of signatures");
@@ -69,7 +66,8 @@ contract OracleTester is VerifierMock {
                 wholeData = string.concat(wholeData, Strings.toString(trims[i]), ",");
             }
             wholeData = string.concat(wholeData, Strings.toString(trims[trims.length - 1]), "],");
-        } else {
+        }
+        if (bytes(post).length != 0) {
             wholeData = string.concat(wholeData, "\"post\":\"", post, "\",");
         }
         wholeData = string.concat(wholeData, "\"time\":", Strings.toString(time), ",");
