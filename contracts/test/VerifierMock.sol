@@ -3,8 +3,6 @@ pragma solidity 0.8.13;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 
-import "hardhat/console.sol";
-
 contract VerifierMock {
 
     address[] public nodeAddresses;

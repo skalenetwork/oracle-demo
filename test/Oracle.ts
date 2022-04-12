@@ -43,95 +43,6 @@ describe("Oracle", () => {
         oracle = await deployOracle();
     })
 
-    describe("Binance example", async () => {
-
-        // Binance example responce
-        // {
-        //     "cid":1,
-        //     "uri":"https://www.binance.com/api/v3/time",
-        //     "jsps":["/serverTime"],
-        //     "trims":[4],
-        //     "time":1649253252000,
-        //     "rslts":["164925325"],
-        //     "sigs":[
-        //         "1:f8e1585c9c10e8121ba813015a44528089d421774ac35cee0f73b0f2b2ae26:38bcb22007487fb5dbe90434ccdbee88aa82281353e497f9d09b636a6997eecb",
-        //         "0:b937ec95b75c0645719bbfbe302e7d35024a5f44162dc9d12a91f04ffc062b5e:5cbdfd134194d0f9df2ac9ac8b5ac2e431cbeb9a12610e78134a11e18341a761",
-        //         null,
-        //         null
-        //     ]
-        // }
-
-        const dataToSign = "{\"cid\":1,\"uri\":\"https://www.binance.com/api/v3/time\",\"jsps\":[\"/serverTime\"],\"trims\":[4],\"time\":1649253252000,\"rslts\":[\"164925325\"],";
-    
-        const cid: number = 1;
-        const uri: string = "https://www.binance.com/api/v3/time";
-        const jsps: string[] = ["/serverTime"];
-        const trims: number[] = [4];
-        const post: string = "";
-        const time: number = 1649253252000;
-        const rslts: string[] = ["164925325"];
-        const sigs: {v: number, r: string, s: string}[] = [
-            {
-                v: 28,
-                r: "0x00f8e1585c9c10e8121ba813015a44528089d421774ac35cee0f73b0f2b2ae26",
-                s: "0x38bcb22007487fb5dbe90434ccdbee88aa82281353e497f9d09b636a6997eecb"
-            },
-            {
-                v: 27,
-                r: "0xb937ec95b75c0645719bbfbe302e7d35024a5f44162dc9d12a91f04ffc062b5e",
-                s: "0x5cbdfd134194d0f9df2ac9ac8b5ac2e431cbeb9a12610e78134a11e18341a761"
-            },
-            {
-                v: 0,
-                r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                s: "0x0000000000000000000000000000000000000000000000000000000000000000"
-            },
-            {
-                v: 0,
-                r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                s: "0x0000000000000000000000000000000000000000000000000000000000000000"
-            },
-        ];
-
-        it("should create a JSON string to sign", async () => {
-            const dataByContract = await oracle.combineOracleResponse(cid, uri, jsps, trims, post, time, rslts);
-
-            assert(dataByContract.should.be.equal(dataToSign));
-        });
-    
-        it("should verify oracle response", async () => {
-            
-            await oracle.setNumberOfNodes(4);
-            const numberOfNodes = await oracle.getNumberOfNodesInSchain();
-            assert(numberOfNodes.should.be.equal(4));
-
-            const countOfTrust = await oracle.getCountOfTrustNumber();
-            assert(countOfTrust.should.be.equal(2));
-
-            await oracle.setNodeAddress("0x594e7e984d543208ea72eb7368a4a44db2566233");
-            await oracle.setNodeAddress("0x870b9d69e9b456b40f152a3b2f1ea979677621a5");
-            await oracle.setNodeAddress("0x57b19c2f8545de9ca195e7740a76423bfe5f62b5");
-            await oracle.setNodeAddress("0x82558add227d1c93ec54630059df7fc59e9e075d");
-
-            const nodeAddress1 = await oracle.nodeAddresses(0);
-            const nodeAddress2 = await oracle.nodeAddresses(1);
-            const nodeAddress3 = await oracle.nodeAddresses(2);
-            const nodeAddress4 = await oracle.nodeAddresses(3);
-
-            assert(nodeAddress1.should.be.equal("0x594e7e984d543208eA72eb7368A4a44db2566233"));
-            assert(nodeAddress2.should.be.equal("0x870b9d69E9b456b40F152A3b2f1EA979677621a5"));
-            assert(nodeAddress3.should.be.equal("0x57B19C2F8545De9ca195E7740a76423BFe5F62B5"));
-            assert(nodeAddress4.should.be.equal("0x82558Add227d1c93Ec54630059dF7FC59E9E075d"));
-    
-            // Comment due to test failure
-            // await oracle.setOracleResponse(cid, uri, jsps, trims, post, time, rslts, sigs);
-
-            // const res = await oracle.data(ethers.utils.id(uri + jsps[0] + post));
-            // assert(res.should.be.equal(rslts[0]));
-        });
-
-    });
-
     describe("Negative tests", async () => {
     
         it("should impossible to send response with incorrect data", async () => {
@@ -746,30 +657,35 @@ describe("Oracle", () => {
         //     "uri":"http://worldtimeapi.org/api/timezone/Europe/Kiev",
         //     "jsps":["/unixtime","/day_of_year"],
         //     "trims":[4,0],
-        //     "post": "",
-        //     "time":1649420124000,
-        //     "rslts":["164942012", "98"],
+        //     "time":1649716742000,
+        //     "rslts":["164971","102"],
+        //     "sigs":[
+        //         "1:2ff66bf21063289eb7b0321cbcd2249e5fe117dc80d9a5d6fc7166ca2cf9abe3:49f33d43ea40f1186e4da36b7558dee232312113f632965b8de04900335815eb",
+        //         "1:6a82dca3174cd9405bf987265ddc06b4557f26f25fa3983b6fa3da88684103ec:53198de374177d52b2529ef1d10d1e6c6a49bbb85d3b6da7441b036136f272f8",
+        //         null,
+        //         null
+        //     ]
         // }
 
-        const dataToSign = "{\"cid\":1,\"uri\":\"http://worldtimeapi.org/api/timezone/Europe/Kiev\",\"jsps\":[\"/unixtime\",\"/day_of_year\"],\"trims\":[4,0],\"time\":1649439342000,\"rslts\":[\"164943\",\"98\"],";
+        const dataToSign = "{\"cid\":1,\"uri\":\"http://worldtimeapi.org/api/timezone/Europe/Kiev\",\"jsps\":[\"/unixtime\",\"/day_of_year\"],\"trims\":[4,0],\"time\":1649716742000,\"rslts\":[\"164971\",\"102\"],";
     
         const cid: number = 1;
         const uri: string = "http://worldtimeapi.org/api/timezone/Europe/Kiev";
         const jsps: string[] = ["/unixtime","/day_of_year"];
         const trims: number[] = [4,0];
         const post: string = "";
-        const time: number = 1649439342000;
-        const rslts: string[] = ["164943", "98"];
+        const time: number = 1649716742000;
+        const rslts: string[] = ["164971", "102"];
         const sigs: {v: number, r: string, s: string}[] = [
             {
-                v: 0,
-                r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                s: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                v: 28,
+                r: "0x2ff66bf21063289eb7b0321cbcd2249e5fe117dc80d9a5d6fc7166ca2cf9abe3",
+                s: "0x49f33d43ea40f1186e4da36b7558dee232312113f632965b8de04900335815eb",
             },
             {
-                v: 0,
-                r: "0x0000000000000000000000000000000000000000000000000000000000000000",
-                s: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                v: 28,
+                r: "0x6a82dca3174cd9405bf987265ddc06b4557f26f25fa3983b6fa3da88684103ec",
+                s: "0x53198de374177d52b2529ef1d10d1e6c6a49bbb85d3b6da7441b036136f272f8",
             },
             {
                 v: 0,
@@ -782,10 +698,10 @@ describe("Oracle", () => {
                 s: "0x0000000000000000000000000000000000000000000000000000000000000000",
             }
         ];
-        const nodeAddressInSchain1: string = "0x594e7e984d543208eA72eb7368A4a44db2566233";
-        const nodeAddressInSchain2: string = "0x870b9d69E9b456b40F152A3b2f1EA979677621a5";
-        const nodeAddressInSchain3: string = "0x57B19C2F8545De9ca195E7740a76423BFe5F62B5";
-        const nodeAddressInSchain4: string = "0x82558Add227d1c93Ec54630059dF7FC59E9E075d";
+        const nodePublicKeyInSchain1: string = "0x04cef9675d6bde53c4a6acf6f9b627eef98aa6db63fab81e8f7047b1aae2071b9c2d54675ed5042a7d819142d19fff4b87309c177f28fc27144f2eb0b30d806eb5";
+        const nodePublicKeyInSchain2: string = "0x04e3b423463f38ec5a2310c05546d0f629e1e2bd0177ecdecf4860a477e054dcd3bd98c258f7d8cbbab02548a966d59274473e1ad32075ba5d3073be24803d46dc";
+        const nodePublicKeyInSchain3: string = "0x043f3a2fcd4eff3f1df8a86b8c86410353c6899128a7659046d3bb8dba80853bd73445513becf4601b50c45611fc4edd954994d5e6bf308ee0767b7102200bd252";
+        const nodePublicKeyInSchain4: string = "0x04edb47dbc4737489d66ef6a816b67828c4f6ae28427e6a267aa04db576ebe628d976a3e45ba3705571d8e59637d1cc9ada855218a99ce12df845c5bcfc21aa958";
 
         it("should create a JSON string to sign", async () => {
             const dataByContract = await oracle.combineOracleResponse(cid, uri, jsps, trims, post, time, rslts);
@@ -802,6 +718,11 @@ describe("Oracle", () => {
             const countOfTrust = await oracle.getCountOfTrustNumber();
             assert(countOfTrust.should.be.equal(2));
 
+            const nodeAddressInSchain1: string = ethers.utils.computeAddress(nodePublicKeyInSchain1);
+            const nodeAddressInSchain2: string = ethers.utils.computeAddress(nodePublicKeyInSchain2);
+            const nodeAddressInSchain3: string = ethers.utils.computeAddress(nodePublicKeyInSchain3);
+            const nodeAddressInSchain4: string = ethers.utils.computeAddress(nodePublicKeyInSchain4);
+
             await oracle.setNodeAddress(nodeAddressInSchain1);
             await oracle.setNodeAddress(nodeAddressInSchain2);
             await oracle.setNodeAddress(nodeAddressInSchain3);
@@ -812,17 +733,114 @@ describe("Oracle", () => {
             const nodeAddress3 = await oracle.nodeAddresses(2);
             const nodeAddress4 = await oracle.nodeAddresses(3);
 
-            assert(nodeAddress1.should.be.equal(nodeAddressInSchain1));
-            assert(nodeAddress2.should.be.equal(nodeAddressInSchain2));
-            assert(nodeAddress3.should.be.equal(nodeAddressInSchain3));
-            assert(nodeAddress4.should.be.equal(nodeAddressInSchain4));
+            assert(nodeAddress1.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain1)));
+            assert(nodeAddress2.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain2)));
+            assert(nodeAddress3.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain3)));
+            assert(nodeAddress4.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain4)));
     
-            // Comment due to test failure
-            // await oracle.setOracleResponse(cid, uri, jsps, trims, post, time, rslts, sigs);
+            await oracle.setOracleResponse(cid, uri, jsps, trims, post, time, rslts, sigs);
 
-            // const res = await oracle.data(ethers.utils.id(uri + jsps[0] + post));
-            // assert(res.should.be.equal(rslts[0]));
+            const res = await oracle.data(ethers.utils.id(uri + jsps[0] + post));
+            assert(res.should.be.equal(rslts[0]));
         });
+    });
+
+    describe("Binance example", async () => {
+
+        // Binance example responce
+        // {
+        //     "cid":1,
+        //     "uri":"https://www.binance.com/api/v3/time",
+        //     "jsps":["/serverTime"],
+        //     "trims":[4],
+        //     "time":1649716768000,
+        //     "rslts":["164971676"],
+        //     "sigs":[
+        //         "0:fd4dde03a49aa83dcad8fe4e1e3e7b51e827c35d0339b047c71dd2a5673ac843:695b94e047f7310143a238d8b61f22ea60dcc3960d897d6dc57f212b91efe6f0",
+        //         "0:67f6d6e061ea286892dbd5fc4b7eb81beda3c25492782953a6176e3b3881e59a:6113210d2f68d95a06674b584a3f1cd610d010ac31d93da11352a0dee96dc2bf",
+        //         null,
+        //         null
+        //     ]
+        // }
+
+        const dataToSign = "{\"cid\":1,\"uri\":\"https://www.binance.com/api/v3/time\",\"jsps\":[\"/serverTime\"],\"trims\":[4],\"time\":1649716768000,\"rslts\":[\"164971676\"],";
+    
+        const cid: number = 1;
+        const uri: string = "https://www.binance.com/api/v3/time";
+        const jsps: string[] = ["/serverTime"];
+        const trims: number[] = [4];
+        const post: string = "";
+        const time: number = 1649716768000;
+        const rslts: string[] = ["164971676"];
+        const sigs: {v: number, r: string, s: string}[] = [
+            {
+                v: 27,
+                r: "0xfd4dde03a49aa83dcad8fe4e1e3e7b51e827c35d0339b047c71dd2a5673ac843",
+                s: "0x695b94e047f7310143a238d8b61f22ea60dcc3960d897d6dc57f212b91efe6f0"
+            },
+            {
+                v: 27,
+                r: "0x67f6d6e061ea286892dbd5fc4b7eb81beda3c25492782953a6176e3b3881e59a",
+                s: "0x6113210d2f68d95a06674b584a3f1cd610d010ac31d93da11352a0dee96dc2bf"
+            },
+            {
+                v: 0,
+                r: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                s: "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+            {
+                v: 0,
+                r: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                s: "0x0000000000000000000000000000000000000000000000000000000000000000"
+            },
+        ];
+
+        const nodePublicKeyInSchain1: string = "0x04cef9675d6bde53c4a6acf6f9b627eef98aa6db63fab81e8f7047b1aae2071b9c2d54675ed5042a7d819142d19fff4b87309c177f28fc27144f2eb0b30d806eb5";
+        const nodePublicKeyInSchain2: string = "0x04e3b423463f38ec5a2310c05546d0f629e1e2bd0177ecdecf4860a477e054dcd3bd98c258f7d8cbbab02548a966d59274473e1ad32075ba5d3073be24803d46dc";
+        const nodePublicKeyInSchain3: string = "0x043f3a2fcd4eff3f1df8a86b8c86410353c6899128a7659046d3bb8dba80853bd73445513becf4601b50c45611fc4edd954994d5e6bf308ee0767b7102200bd252";
+        const nodePublicKeyInSchain4: string = "0x04edb47dbc4737489d66ef6a816b67828c4f6ae28427e6a267aa04db576ebe628d976a3e45ba3705571d8e59637d1cc9ada855218a99ce12df845c5bcfc21aa958";
+
+        it("should create a JSON string to sign", async () => {
+            const dataByContract = await oracle.combineOracleResponse(cid, uri, jsps, trims, post, time, rslts);
+
+            assert(dataByContract.should.be.equal(dataToSign));
+        });
+    
+        it("should verify oracle response", async () => {
+            
+            await oracle.setNumberOfNodes(4);
+            const numberOfNodes = await oracle.getNumberOfNodesInSchain();
+            assert(numberOfNodes.should.be.equal(4));
+
+            const countOfTrust = await oracle.getCountOfTrustNumber();
+            assert(countOfTrust.should.be.equal(2));
+
+            const nodeAddressInSchain1: string = ethers.utils.computeAddress(nodePublicKeyInSchain1);
+            const nodeAddressInSchain2: string = ethers.utils.computeAddress(nodePublicKeyInSchain2);
+            const nodeAddressInSchain3: string = ethers.utils.computeAddress(nodePublicKeyInSchain3);
+            const nodeAddressInSchain4: string = ethers.utils.computeAddress(nodePublicKeyInSchain4);
+
+            await oracle.setNodeAddress(nodeAddressInSchain1);
+            await oracle.setNodeAddress(nodeAddressInSchain2);
+            await oracle.setNodeAddress(nodeAddressInSchain3);
+            await oracle.setNodeAddress(nodeAddressInSchain4);
+
+            const nodeAddress1 = await oracle.nodeAddresses(0);
+            const nodeAddress2 = await oracle.nodeAddresses(1);
+            const nodeAddress3 = await oracle.nodeAddresses(2);
+            const nodeAddress4 = await oracle.nodeAddresses(3);
+
+            assert(nodeAddress1.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain1)));
+            assert(nodeAddress2.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain2)));
+            assert(nodeAddress3.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain3)));
+            assert(nodeAddress4.should.be.equal(ethers.utils.getAddress(nodeAddressInSchain4)));
+    
+            await oracle.setOracleResponse(cid, uri, jsps, trims, post, time, rslts, sigs);
+
+            const res = await oracle.data(ethers.utils.id(uri + jsps[0] + post));
+            assert(res.should.be.equal(rslts[0]));
+        });
+
     });
 
 });
