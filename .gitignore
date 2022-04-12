@@ -7,3 +7,5 @@ cache
 typechain
 
 yarn-error.log
+
+data/*.json
