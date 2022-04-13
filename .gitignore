@@ -1,11 +1,11 @@
 venv/
 .idea/
 
-node_modules
-artifacts
-cache
-typechain
+oracle-contract/node_modules
+oracle-contract/artifacts
+oracle-contract/cache
+oracle-contract/typechain
 
-yarn-error.log
+oracle-contract/yarn-error.log
 
-data/*.json
+oracle-contract/data/*.json
