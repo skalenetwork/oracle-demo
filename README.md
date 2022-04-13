@@ -3,12 +3,13 @@ Examples of using Skale Oracle
 
 ## Install
 
-1)  Clone this repo
+1)  Clone this repo and enter the repo
+2)  run `cd oracle-contract/`
 2)  run `yarn install`
 
 ## Deployment
 
-The `.env` file should include the following variables:
+The `.env` file in the `oracle-contract` folder should include the following variables:
 
 ```bash
 ENDPOINT="your mainnet RPC url, it also can be an infura endpoint"
