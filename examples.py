@@ -91,9 +91,12 @@ def run():
     for request in example_requests:
         start = time.time()
         response = send_oracle_request(request)
-        check_result(response['result'])
-        print(f'Time:{(time.time() - start)}')
-        print('')
-        print('')
+        if response.get('result'):
+            check_result(response['result'])
+            print(f'Time:{(time.time() - start)}')
+            print('')
+            print('')
+        else:
+            print('Send oracle request failed')
 
 run()
