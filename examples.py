@@ -1,5 +1,5 @@
 import time
-from Crypto.Hash import SHA3_256
+from Crypto.Hash import keccak
 import json
 import requests
 
@@ -17,7 +17,7 @@ def send_oracle_request(request):
     while i < MAX_POW_NUMBER:
         pow = str(i)
         s = '{'+request+',"time":'+ts+',"pow":'+pow+'}'
-        k = SHA3_256.new()
+        k = keccak.new(digest_bits=256)
         k.update(str.encode(s))
         b = "0x" + k.hexdigest()
         f = int(b, base=16)
