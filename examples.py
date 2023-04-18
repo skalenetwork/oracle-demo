@@ -16,7 +16,7 @@ def send_oracle_request(request):
 
     while i < MAX_POW_NUMBER:
         pow = str(i)
-        s = '{'+request+',"time":'+ts+',"pow":'+pow+'}'
+        s = '{'+request.replace(" ", "")+',"time":'+ts+',"pow":'+pow+'}'
         k = keccak.new(digest_bits=256)
         k.update(str.encode(s))
         b = "0x" + k.hexdigest()
