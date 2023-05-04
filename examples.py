@@ -27,7 +27,7 @@ from Crypto.Hash import keccak
 MIN_POW_RESULT = 10000
 MAX_POW_NUMBER = 100000
 
-url = os.environ.get('ENDPOINT')
+url = os.environ.get('ENDPOINT', 'http://127.0.0.1:2234')
 w3 = Web3(Web3.HTTPProvider(url))
 
 # Chain Id of requested chain, not destination chain.
@@ -101,7 +101,7 @@ def check_result(hash):
 def run():
     example_requests = [
         # response with array of objects
-        '"cid":f"{cid}","uri":"https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=1&aggregate=3&e=CCCAGG","jsps":["/Data/Data/0/high","/Data/Data/0/low","/Data/Data/1/high","/Data/Data/1/low","/Data/Data/2/high","/Data/Data/2/low"],"encoding":"json"',
+        f'"cid":f"{cid}","uri":"https://min-api.cryptocompare.com/data/v2/histoday?fsym=BTC&tsym=USD&limit=1&aggregate=3&e=CCCAGG","jsps":["/Data/Data/0/high","/Data/Data/0/low","/Data/Data/1/high","/Data/Data/1/low","/Data/Data/2/high","/Data/Data/2/low"],"encoding":"json"',
         # api get Worldtime api
         f'"cid":{cid},"uri":"http://worldtimeapi.org/api/timezone/Europe/Kiev","jsps":["/unixtime","/day_of_year"],"trims":[1,1],"encoding":"json"',
         # api post
@@ -136,14 +136,12 @@ def run():
         # f'"cid":{cid},"uri":"eth://","jsps":["/result"],""encoding":"json","ethApi":"eth_gasPrice","params":[]',
         # # getBlockNumber
         # f'"cid":{cid},"uri":"eth://","jsps":["/result"],encoding":"json","ethApi":"eth_blockNumber","params":[]',
-        # #   get blockByNumber
+        # # get blockByNumber
         # f'"cid":{cid},"uri":"eth://","jsps":["/result/timestamp"],encoding":"json","ethApi":"eth_getBlockByNumber","params":["0x0",false]"',
         # # get blockByHash
         # f'"cid":{cid},"uri":"eth://","jsps":["/result/timestamp"],encoding":"json","ethApi":"eth_getBlockByHash","params":["0xaddbab0cf8f32d7954f66771b54e0794cd22ee067a4d31fb1baa6cc812c79d77",false]',
         # # getBalance call
         # f'"cid":{cid},"uri":"eth://","jsps":["/result"],encoding":"json","ethApi":"eth_getBalance","params":["0x26190C856477F372d7f51ab7bc8eB00765A5F288","latest"]',
-        # #  BSC gasPrice call
-        # f'"cid":{cid},"uri":"https://rpc.ankr.com/bsc","jsps":["/result"],encoding":"json","ethApi":"eth_gasPrice","params":[]',
         # # Arbitrum gasPrice call
         # f'"cid":{cid},"uri":"https://rpc.ankr.com/arbitrum","jsps":["/result"],encoding":"json","ethApi":"eth_gasPrice","params":[]',
         # # Arbitrum blockNumber
@@ -152,13 +150,14 @@ def run():
         # f'"cid":{cid},"uri":"https://rpc.ankr.com/arbitrum","jsps":["/result"],encoding":"json","ethApi":"eth_gasBlockByNymber","params":["1",false]',
         # # Arbitrum blockByHash
         # f'"cid":{cid},"uri":"https://rpc.ankr.com/arbitrum","jsps":["/result"],encoding":"json","ethApi":"eth_getBlockByHash","params":["0xc91d21cf56df699f7bdc73b6d0a5296e04d26e5298bd208bb23f8f49a07e3cab",false]',
+        # # BSC gasPrice call
+        # f'"cid":{cid},"uri":"https://rpc.ankr.com/bsc","jsps":["/result"],encoding":"json","ethApi":"eth_gasPrice","params":[]',
         # # BSC blockNumber
         # f'"cid":{cid},"uri":"https://rpc.ankr.com/bsc","jsps":["/result"],encoding":"json","ethApi":"eth_blockNumber","params":[]',
-        # #  BSC blockByNumber
+        # # BSC blockByNumber
         # f'"cid":{cid},"uri":"https://rpc.ankr.com/bsc","jsps":["/result"],encoding":"json","ethApi":"eth_gasBlockByNymber","params":["latest",false]',
-        # #  BSC blockByHash
+        # # BSC blockByHash
         # f'"cid":{cid},"uri":"https://rpc.ankr.com/bsc","jsps":["/result"],encoding":"json","ethApi":"eth_getBlockByHash","params":["0x2fe3db7ec87e719adb1ba5efc7ce5f529779f6416653c0f7faa14726c22912c4",false]',
-
     ]
     for request in example_requests:
         start = time.time()
